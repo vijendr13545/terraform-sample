@@ -1,1 +1,1 @@
-# terraform-sample
+# Sample Terraform Scripts
