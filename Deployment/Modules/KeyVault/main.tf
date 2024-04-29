@@ -16,16 +16,20 @@ resource "azurerm_key_vault_access_policy" "kv_access_terraform" {
   object_id    = data.azurerm_client_config.current.object_id
 
   key_permissions = [
-    "create",
-    "get",
+    "Create",
+    "Get",
   ]
 
   secret_permissions = [
-    "set",
-    "get",
-    "delete",
-    "recover",
-    "purge"
+    "Set",
+    "Get",
+    "Delete",
+    "Recover",
+    "Purge"
+  ]
+
+  certificate_permissions = [
+    "ManageContacts",
   ]
 }
 
@@ -37,13 +41,13 @@ resource "azurerm_key_vault_access_policy" "kv_read_access" {
   object_id    = each.value
 
   key_permissions = [
-    "list",
-    "get",
+    "List",
+    "Get",
   ]
 
   secret_permissions = [
-    "list",
-    "get"
+    "List",
+    "Get"
   ]
 }
 
@@ -54,5 +58,17 @@ resource "azurerm_key_vault_secret" "passed_in_secrets" {
   key_vault_id = azurerm_key_vault.kv.id
   tags         = var.tags
   
+  depends_on = [azurerm_key_vault_access_policy.kv_access_terraform]
+}
+
+resource "azurerm_key_vault_certificate_contacts" "certificate_contacts" {
+  key_vault_id = azurerm_key_vault.kv.id
+
+  contact {
+    email = "admin@mycompany.com"
+    name  = "Admin"
+    phone = "01234567890"
+  }
+
   depends_on = [azurerm_key_vault_access_policy.kv_access_terraform]
 }
