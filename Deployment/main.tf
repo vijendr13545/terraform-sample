@@ -19,6 +19,15 @@ module "webapp_service" {
   tags                      = local.tags
 }
 
+module "storage" {
+  source              = "./Modules/Storage"
+  resource_group_name = azurerm_resource_group.rg.name
+  name                = "${local.service_name}${local.env_name}storage"
+  location            = azurerm_resource_group.rg.location
+  webapp_principal_id = module.webapp_service.web_app_object_id
+  tags                = local.tags
+}
+
 module "key_vault" {
   source              = "./Modules/KeyVault"
   name                = "${local.service_name}-${local.env_name}-kv"
@@ -34,14 +43,6 @@ module "key_vault" {
   tags                = local.tags
 }
 
-module "storage" {
-  source              = "./Modules/Storage"
-  resource_group_name = azurerm_resource_group.rg.name
-  name                = "${local.service_name}${local.env_name}storage"
-  location            = azurerm_resource_group.rg.location
-  webapp_principal_id = module.webapp_service.web_app_object_id
-  tags                = local.tags
-}
 
 
 
